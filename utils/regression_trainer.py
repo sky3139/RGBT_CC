@@ -62,6 +62,13 @@ class RegTrainer(Trainer):
                             for x in ['train', 'val', 'test']}
 
         self.model = fusion_model()
+        # print(self.model)
+
+
+        # from tensorwatch import draw_model
+        # draw_model(self.model, [1, 3, 64, 64])  # 输出网络结构
+
+
         self.model.to(self.device)
         self.optimizer = optim.Adam(self.model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
@@ -153,7 +160,7 @@ class RegTrainer(Trainer):
             'model_state_dict': model_state_dic
         }, save_path)
         self.save_list.append(save_path)  # control the number of saved models
-
+        torch.save(model_state_dic, os.path.join(self.save_dir, 'best_model.pth'))
     def val_epoch(self):
         args = self.args
         self.model.eval()  # Set model to evaluate mode
@@ -212,7 +219,7 @@ class RegTrainer(Trainer):
                 self.best_count += 1
             else:
                 torch.save(model_state_dic, os.path.join(self.save_dir, 'best_model.pth'))
-
+        # torch.save(model_state_dic, os.path.join(self.save_dir, 'best_model.pth'))
         return game0_is_best, game3_is_best
 
     def test_epoch(self):

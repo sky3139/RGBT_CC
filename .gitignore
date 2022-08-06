@@ -1,2 +1,8 @@
 
 datasets/cc
+models/__pycache__/
+losses/__pycache__/
+
+utils/__pycache__/
+datasets/08*
+datasets/__pycache__/*

@@ -37,7 +37,7 @@ class FusionModel(nn.Module):
         _, _, shared = self.block5(RGB, T, shared)
         x = shared
 
-        x = F.upsample_bilinear(x, scale_factor=2)
+        x = F.interpolate(x, scale_factor=2)
         x = self.reg_layer(x)
         return torch.abs(x)
 
@@ -120,6 +120,8 @@ class MSC(nn.Module):
         super(MSC, self).__init__()
         self.channels = channels
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
+        # self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0, 
+		# 	dilation=1, return_indices=False, ceil_mode=False)
         self.pool2 = nn.MaxPool2d(kernel_size=4, stride=4)
 
         self.conv = nn.Sequential(

@@ -8,11 +8,11 @@ from utils.evaluation import eval_game, eval_relative
 import numpy as np
 from torchvision import transforms
 parser = argparse.ArgumentParser(description='Test')
-parser.add_argument('--data-dir', default='/home/u20/gitee/RGBTCrowdCounting/RGBT/datasets/cc',
+parser.add_argument('--data-dir', default='/home/u20/gitee/RGBTCrowdCounting/DroneRGBT/save',
                         help='training data directory')
 parser.add_argument('--save-dir', default='./',
                         help='model directory')
-parser.add_argument('--model', default='best_model_0.pth'
+parser.add_argument('--model', default='datasets/cc/best_model.pth'
                     , help='model name')
 
 parser.add_argument('--device', default='0', help='gpu device')
@@ -73,7 +73,7 @@ if __name__ == '__main__':
             output_num = outputs.cpu().data.sum()
             src_img=cv2.imread(rgb_path[0])
             src_timg=cv2.imread(t_path[0])
-            print(output_num)
+            print(target_num,output_num)
             cv2.imshow("a",src_img)
             cv2.imshow("t",src_timg)
             cv2.waitKey(0)

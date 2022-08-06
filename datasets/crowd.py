@@ -23,6 +23,7 @@ class Crowd(data.Dataset):
 
         self.root_path = root_path
         self.gt_list = sorted(glob(os.path.join(self.root_path, '*.npy')))  # change to npy for gt_list
+        print(self.root_path)
         if method not in ['train', 'val', 'test','demo']:
             raise Exception("not implement")
         self.method = method
@@ -50,6 +51,7 @@ class Crowd(data.Dataset):
 
     def __getitem__(self, item):
         gt_path = self.gt_list[item]
+        
         rgb_path = gt_path.replace('GT', 'RGB').replace('npy', 'jpg')
         t_path = gt_path.replace('GT', 'T').replace('npy', 'jpg')
 

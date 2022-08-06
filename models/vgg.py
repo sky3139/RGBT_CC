@@ -32,7 +32,7 @@ class VGG(nn.Module):
         else:
             x = data
         x = self.features(x)
-        x = F.upsample_bilinear(x, scale_factor=2)
+        x = F.interpolate(x, scale_factor=2)
         x = self.reg_layer(x)
         return torch.abs(x)
 

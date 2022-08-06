@@ -6,5 +6,6 @@ python3 train.py \
 python3 train.py \
     --data-dir /home/u20/gitee/RGBTCrowdCounting/DroneRGBT/save \
     --save-dir ./datasets \
-    --lr 1e-5 \
+    --max-epoch 10 \
+    --lr 1e-3 \
     --device 0
