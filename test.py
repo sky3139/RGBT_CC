@@ -7,7 +7,7 @@ from utils.evaluation import eval_game, eval_relative
 
 
 parser = argparse.ArgumentParser(description='Test')
-parser.add_argument('--data-dir', default='/home/teddy/UCF-Train-Val-Test',
+parser.add_argument('--datadir', default='/home/teddy/UCF-Train-Val-Test',
                         help='training data directory')
 parser.add_argument('--save-dir', default='/home/teddy/vgg',
                         help='model directory')
@@ -20,7 +20,7 @@ args = parser.parse_args()
 if __name__ == '__main__':
 
 
-    datasets = Crowd(os.path.join(args.data_dir, 'test'), method='test')
+    datasets = Crowd(os.path.join(args.datadir, 'test'), method='test')
     dataloader = torch.utils.data.DataLoader(datasets, 1, shuffle=False,
                                              num_workers=8, pin_memory=True)
 

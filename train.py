@@ -7,7 +7,7 @@ args = None
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train ')
-    parser.add_argument('--data-dir', default='/home/teddy/UCF-Train-Val-Test',
+    parser.add_argument('--datadir', default='/home/teddy/UCF-Train-Val-Test',
                         help='training data directory')
     parser.add_argument('--save-dir', default='/home/teddy/iccv-reproduce-new',
                         help='directory to save models.')

@@ -21,12 +21,29 @@ class Crowd(data.Dataset):
                  downsample_ratio=8,
                  method='train'):
 
-        self.root_path = root_path
-        self.gt_list = sorted(glob(os.path.join(self.root_path, '*.npy')))  # change to npy for gt_list
-        print(self.root_path)
+        self.root_path =root_path+'/*.npy'
+        gt_list = sorted(glob(self.root_path))  # change to npy for 
+
+        print(root_path)
         if method not in ['train', 'val', 'test','demo']:
             raise Exception("not implement")
         self.method = method
+        self.gt_fen_list=[]
+        if method=="train":
+            for i,v in enumerate( gt_list):
+                print(v)
+                if(i%3==0):
+                    self.gt_fen_list.append(v)
+        elif method=="val":
+            for i,v in enumerate( gt_list):
+                if(i%3==1):
+                    self.gt_fen_list.append(v)
+        elif method=="test":
+            for i,v in enumerate( gt_list):
+                if(i%3==2):
+                    self.gt_fen_list.append(v)
+        elif method=="demo":
+            self.gt_fen_list=gt_list
 
         self.c_size = crop_size
         self.d_ratio = downsample_ratio
@@ -45,12 +62,13 @@ class Crowd(data.Dataset):
                 mean=[0.492, 0.168, 0.430],
                 std=[0.317, 0.174, 0.191]),
         ])
+        print(len(gt_list),len(self.gt_fen_list))
 
     def __len__(self):
-        return len(self.gt_list)
+        return len(self.gt_fen_list)
 
     def __getitem__(self, item):
-        gt_path = self.gt_list[item]
+        gt_path = self.gt_fen_list[item]
         
         rgb_path = gt_path.replace('GT', 'RGB').replace('npy', 'jpg')
         t_path = gt_path.replace('GT', 'T').replace('npy', 'jpg')
@@ -65,16 +83,16 @@ class Crowd(data.Dataset):
 
         elif self.method == 'val' or self.method == 'test' or self.method == 'demo' :  # TODO
             keypoints = np.load(gt_path)
-            print(keypoints)
+            # print(keypoints)
             gt = keypoints
             k = np.zeros((T.shape[0], T.shape[1]))
             for i in range(0, len(gt)):
                 if int(gt[i][1]) < T.shape[0] and int(gt[i][0]) < T.shape[1]:
                     k[int(gt[i][1]), int(gt[i][0])] = 1
             target = k
-            print("a",RGB.size)
+            # print("a",RGB.size)
             RGB = self.RGB_transform(RGB)
-            print("b",RGB.size())
+            # print("b",RGB.size())
             # cv2.imshow("RGB",RGB)
             # cv2.waitKey(0)
             # print(RGB.shape)

@@ -8,7 +8,7 @@ from utils.evaluation import eval_game, eval_relative
 import numpy as np
 from torchvision import transforms
 parser = argparse.ArgumentParser(description='Test')
-parser.add_argument('--data-dir', default='/home/u20/gitee/RGBTCrowdCounting/DroneRGBT/save',
+parser.add_argument('--datadir', default='/home/u20/gitee/RGBTCrowdCounting/DroneRGBT/save',
                         help='training data directory')
 parser.add_argument('--save-dir', default='./',
                         help='model directory')
@@ -34,7 +34,7 @@ if __name__ == '__main__':
             std=[0.317, 0.174, 0.191]),
     ])
 
-    datasets = Crowd(os.path.join(args.data_dir, 'demo'), method='demo')
+    datasets = Crowd(os.path.join(args.datadir, 'demo'), method='demo')
     dataloader = torch.utils.data.DataLoader(datasets, 1, shuffle=False,
                                              num_workers=1, pin_memory=True)
 
@@ -43,7 +43,8 @@ if __name__ == '__main__':
 
     model = fusion_model()
     model.to(device)
-    model_path = os.path.join(args.save_dir, args.model)
+    model_path =args.model # os.path.join(args.save_dir, args.model)
+    print(model_path)
     checkpoint = torch.load(model_path, device)
     model.load_state_dict(checkpoint)
     model.eval()
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     game = [0, 0, 0, 0]
     mse = [0, 0, 0, 0]
     total_relative_error = 0
-
+    fw = open("datasets/cc/ans.txt",'w')
     for inputs, target, rgb_path,t_path in dataloader:
         inputs[0] = inputs[0].to(device)
         inputs[1] = inputs[1].to(device)
@@ -61,6 +62,7 @@ if __name__ == '__main__':
             assert inputs[0].size(0) == 1
         else:
             assert inputs.size(0) == 1, 'the batch size should equal to 1 in validation mode'
+        
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
             # print(outputs[0][0][0].cpu().numpy())
@@ -68,14 +70,17 @@ if __name__ == '__main__':
             t_img=target[0].cpu().numpy()
             target_num = target.sum().float()
             # print(t_img.shape,output_img.shape)
-            cv2.imshow("output_img",output_img*255)
-            cv2.imshow("t_img",t_img)
-            output_num = outputs.cpu().data.sum()
+            # cv2.imshow("output_img",output_img*255)
+            # cv2.imshow("t_img",t_img)
+            output_num = outputs.cpu().data.sum().numpy()
             src_img=cv2.imread(rgb_path[0])
-            src_timg=cv2.imread(t_path[0])
+            # src_timg=cv2.imread(t_path[0])
             print(target_num,output_num)
             cv2.imshow("a",src_img)
-            cv2.imshow("t",src_timg)
-            cv2.waitKey(0)
-
+            # cv2.imshow("t",src_timg)
+            cv2.waitKey(1)
+            name = os.path.basename(rgb_path[0]).split('.')[0].replace("_RGB","")
+            fw.write(name+","+str(output_num)+"\n")
+        # break
+    fw.close()
         # break

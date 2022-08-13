@@ -45,9 +45,9 @@ class RegTrainer(Trainer):
             logging.info('using {} gpus'.format(self.device_count))
         else:
             raise Exception("gpu is not available")
-
+        # print(args.datadir)
         self.downsample_ratio = args.downsample_ratio
-        self.datasets = {x: Crowd(os.path.join(args.data_dir, x),
+        self.datasets = {x: Crowd(args.datadir,
                                   args.crop_size,
                                   args.downsample_ratio,
                                   x) for x in ['train', 'val', 'test']}
