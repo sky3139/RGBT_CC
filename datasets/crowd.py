@@ -22,48 +22,48 @@ class Crowd(data.Dataset):
                  method='train'):
 
         self.root_path =root_path+'/*.npy'
+        print(self.root_path)
         gt_list = sorted(glob(self.root_path))  # change to npy for 
 
-        print(root_path)
+        # print(root_path)
         if method not in ['train', 'val', 'test','demo']:
             raise Exception("not implement")
         self.method = method
-        self.gt_fen_list=[]
-        if method=="train":
-            for i,v in enumerate( gt_list):
-                print(v)
-                if(i%3==0):
-                    self.gt_fen_list.append(v)
-        elif method=="val":
-            for i,v in enumerate( gt_list):
-                if(i%3==1):
-                    self.gt_fen_list.append(v)
-        elif method=="test":
-            for i,v in enumerate( gt_list):
-                if(i%3==2):
-                    self.gt_fen_list.append(v)
-        elif method=="demo":
-            self.gt_fen_list=gt_list
+        self.gt_fen_list=gt_list
+        # if method=="train":
+            # for i,v in enumerate( gt_list):
+                # print(v)
+                # if(i%3==0):
+                    # self.gt_fen_list.append(v)
+        # elif method=="val":
+        #     for i,v in enumerate( gt_list):
+        #         if(i%3==1):
+        #             self.gt_fen_list.append(v)
+        # elif method=="test":
+        #     for i,v in enumerate( gt_list):
+        #         if(i%3==2):
+        #             self.gt_fen_list.append(v)
+        # elif method=="demo":
+        #     self.gt_fen_list=gt_list
 
         self.c_size = crop_size
         self.d_ratio = downsample_ratio
         assert self.c_size % self.d_ratio == 0
         self.dc_size = self.c_size // self.d_ratio
 
-        self.RGB_transform = transforms.Compose([
+        self.T_transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(
-                mean=[0.407, 0.389, 0.396],
-                std=[0.241, 0.246, 0.242]),
+                mean=[0.4947851, 0.4947851, 0.4947851],
+                std=[0.1818127, 0.1818127, 0.1818127]),
         ])
-        self.T_transform = transforms.Compose([
+        self.RGB_transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=[0.492, 0.168, 0.430],
                 std=[0.317, 0.174, 0.191]),
         ])
         print(len(gt_list),len(self.gt_fen_list))
-
     def __len__(self):
         return len(self.gt_fen_list)
 

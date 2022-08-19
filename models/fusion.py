@@ -119,9 +119,9 @@ class MSC(nn.Module):
     def __init__(self, channels):
         super(MSC, self).__init__()
         self.channels = channels
-        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
-        # self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0, 
-		# 	dilation=1, return_indices=False, ceil_mode=False)
+        # self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0, 
+			dilation=1, return_indices=False, ceil_mode=True)
         self.pool2 = nn.MaxPool2d(kernel_size=4, stride=4)
 
         self.conv = nn.Sequential(
