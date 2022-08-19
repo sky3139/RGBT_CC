@@ -30,21 +30,6 @@ class Crowd(data.Dataset):
             raise Exception("not implement")
         self.method = method
         self.gt_fen_list=gt_list
-        # if method=="train":
-            # for i,v in enumerate( gt_list):
-                # print(v)
-                # if(i%3==0):
-                    # self.gt_fen_list.append(v)
-        # elif method=="val":
-        #     for i,v in enumerate( gt_list):
-        #         if(i%3==1):
-        #             self.gt_fen_list.append(v)
-        # elif method=="test":
-        #     for i,v in enumerate( gt_list):
-        #         if(i%3==2):
-        #             self.gt_fen_list.append(v)
-        # elif method=="demo":
-        #     self.gt_fen_list=gt_list
 
         self.c_size = crop_size
         self.d_ratio = downsample_ratio
@@ -76,6 +61,7 @@ class Crowd(data.Dataset):
         RGB = cv2.imread(rgb_path)[..., ::-1].copy()
         T = cv2.imread(t_path)[..., ::-1].copy()
         # cv2.imshow("RGB",RGB)
+        # cv2.waitKey(0)
         
         if self.method == 'train':
             keypoints = np.load(gt_path)
@@ -90,6 +76,7 @@ class Crowd(data.Dataset):
                 if int(gt[i][1]) < T.shape[0] and int(gt[i][0]) < T.shape[1]:
                     k[int(gt[i][1]), int(gt[i][0])] = 1
             target = k
+            # assert len(k)==0
             # print("a",RGB.size)
             RGB = self.RGB_transform(RGB)
             # print("b",RGB.size())
@@ -98,7 +85,7 @@ class Crowd(data.Dataset):
             # print(RGB.shape)
             T = self.T_transform(T)
             # name = os.path.basename(gt_path).split('.')[0]
-
+            # print(target)
             input = [RGB, T]
             return input, target, rgb_path,t_path
 

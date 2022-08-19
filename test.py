@@ -1,5 +1,5 @@
 import torch
-import os
+import os,cv2
 import argparse
 from datasets.crowd import Crowd
 from models.fusion import fusion_model
@@ -20,9 +20,9 @@ args = parser.parse_args()
 if __name__ == '__main__':
 
 
-    datasets = Crowd(os.path.join(args.datadir, 'test'), method='test')
+    datasets = Crowd(os.path.join(args.datadir, 'train'), method='train')
     dataloader = torch.utils.data.DataLoader(datasets, 1, shuffle=False,
-                                             num_workers=8, pin_memory=True)
+                                             num_workers=1, pin_memory=True)
 
     os.environ['CUDA_VISIBLE_DEVICES'] = args.device  # set vis gpu
     device = torch.device('cuda')
@@ -54,8 +54,13 @@ if __name__ == '__main__':
             assert inputs.size(0) == 1, 'the batch size should equal to 1 in validation mode'
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
-
+            if(len(target.shape[1])==0):
+                cv2.imshow("a",inputs[0][0].cpu().numpy())
+                cv2.waitKey()
+            
             for L in range(4):
+                if(target.shape[1]==0):
+                    continue
                 abs_error, square_error = eval_game(outputs, target, L)
                 game[L] += abs_error
                 mse[L] += square_error
