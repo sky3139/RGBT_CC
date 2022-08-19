@@ -63,8 +63,14 @@ class RegTrainer(Trainer):
 
         self.model = fusion_model()
         # print(self.model)
-
-
+        if args.mode!="":
+                model_path =args.model # os.path.join(args.save_dir, args.model)
+                print(args.model)
+                checkpoint = torch.load(args.model, self.device)
+                self.model.load_state_dict(checkpoint)
+                # model.eval()
+        else :
+            print("Creat mode!")
         # from tensorwatch import draw_model
         # draw_model(self.model, [1, 3, 64, 64])  # 输出网络结构
 

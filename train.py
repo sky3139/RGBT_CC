@@ -44,6 +44,8 @@ def parse_args():
                         help='sigma for likelihood')
     parser.add_argument('--background-ratio', type=float, default=0.15,
                         help='background ratio')
+    parser.add_argument(
+        '--model', default='datasets/cc/best_model.pth', help='model name')
     args = parser.parse_args()
     return args
 
